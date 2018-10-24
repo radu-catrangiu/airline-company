@@ -1,8 +1,16 @@
 const app = require('express')();
 const body_parser = require('body-parser');
 const async = require('async');
+const path = require('path');
 
 app.use(body_parser.json());
+
+app.get("*", (request, result) => {
+
+    if (request.url === '/') {
+        result.sendFile(path.resolve(__dirname + '/../website/index.html'));
+    }
+});
 
 exports.init = (port, rpc_config, modules, callback) => {
     const services = rpc_config.services;
