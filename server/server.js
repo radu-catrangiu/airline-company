@@ -55,7 +55,12 @@ function send_result(data, response) {
         "result" : {}
     };
 
-    Object.assign(jsonrpc.result, data);
+    if (data instanceof Array || data instanceof String) {
+        jsonrpc.result = data;
+    } else {
+        Object.assign(jsonrpc.result, data);
+    }
+
     response.send(jsonrpc);
 }
 

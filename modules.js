@@ -10,14 +10,15 @@ const init_db = (callback) => {
     const login_url = config.mongo.url;
     const db_name = config.mongo.db;
     const collections = config.mongo.collections;
-
+    const schemas = config.mongo.schemas;
+    const indexes = config.mongo.indexes;
 
     const url = `mongodb://${user}:${password}@${login_url}`;
     const options = {
         useNewUrlParser: true
     };
 
-    mongo.connect(url, options, function(err, client) {
+    mongo.connect(url, options, function (err, client) {
         if (err) {
             callback(err);
         } else {
@@ -25,7 +26,20 @@ const init_db = (callback) => {
             const coll_names = Object.keys(collections);
 
             coll_names.forEach(name => {
+                const options = {
+                    validator: {
+                        $jsonSchema: schemas[name]
+                    }
+                };
+                db.createCollection(name, options);
                 modules[collections[name]] = db.collection(name);
+
+                if (indexes[name]) {
+                    db.collection(name).createIndex(indexes[name], {
+                        unique: true,
+                        background: true
+                    });
+                }
             });
 
             callback(null);

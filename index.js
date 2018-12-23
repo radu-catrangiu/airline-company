@@ -10,8 +10,8 @@ if (process.env.debug) {
 
 const rpc_config = {
 	"services": {
-		"/ping": {
-			"handler": require('./api/ping.js'),
+		"/admin": {
+			"handler": require('./api/admin.js'),
 			"useAuth": "BACKEND_TOKEN",
 			"useDestination": false,
 			// "validationSchema": schema
