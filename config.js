@@ -5,7 +5,7 @@ module.exports = {
         password: "123Parola",
         db: "bd2",
         collections: {
-            airports: "airports",
+            bookings: "bookings",
             employees: "employees",
             members: "members",
             planes: "planes",

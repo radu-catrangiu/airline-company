@@ -8,7 +8,7 @@ app.use(body_parser.json());
 app.get("*", (request, result) => {
 
     if (request.url === '/') {
-        result.sendFile(path.resolve(__dirname + '/../website/index.html'));
+        result.sendFile(path.resolve(__dirname + '/../www/index.html'));
     }
 });
 
