@@ -2,13 +2,32 @@ const app = require('express')();
 const body_parser = require('body-parser');
 const async = require('async');
 const path = require('path');
+const fs = require('fs');
 
 app.use(body_parser.json());
+
+// Read the resources directory
+const resources = fs.readdirSync(path.resolve(__dirname + '/../www/resources'));
+
+app.get('/resources/*', (req, res) => {
+    const file = req.path.split('/').pop();
+    if (resources.includes(file)) {
+        res.sendFile(path.resolve(__dirname + '/../www/resources/' + file));
+    } else {
+        res.sendStatus(403);
+    }
+});
 
 app.get("*", (request, result) => {
 
     if (request.url === '/') {
         result.sendFile(path.resolve(__dirname + '/../www/index.html'));
+    }
+    if (request.url === '/admin') {
+        result.sendFile(path.resolve(__dirname + '/../www/admin/admin.html'));
+    }
+    if (request.url === '/admin.js') {
+        result.sendFile(path.resolve(__dirname + '/../www/admin/admin.js'));
     }
 });
 
