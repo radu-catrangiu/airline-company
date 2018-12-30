@@ -11,16 +11,16 @@ if (process.env.debug) {
 const rpc_config = {
 	"services": {
 		"/admin": {
-			"handler": require('./api/admin.js'),
-			"useAuth": "BACKEND_TOKEN",
-			"useDestination": false,
-			// "validationSchema": schema
+            "handler": require('./api/admin.js'),
+            "useAuth": false
         },
         "/client" : {
-			"handler": require('./api/client.js'),
-			"useAuth": "BACKEND_TOKEN",
-			"useDestination": false,
-			// "validationSchema": schema
+            "handler": require('./api/client.js'),
+            "useAuth": true
+        },
+        "/account" : {
+            "handler": require('./api/account.js'),
+            "useAuth": false
         }
 	}
 };

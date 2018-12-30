@@ -1,10 +1,12 @@
 const app = require('express')();
 const body_parser = require('body-parser');
+const cookie_parser = require('cookie-parser');
 const async = require('async');
 const path = require('path');
 const fs = require('fs');
 
 app.use(body_parser.json());
+app.use(cookie_parser());
 
 // Read the resources directory
 const resources = fs.readdirSync(path.resolve(__dirname + '/../www/resources'));
@@ -19,49 +21,62 @@ app.get('/resources/*', (req, res) => {
     }
 });
 
-app.get("*", (request, result) => {
-    console.error('* : ' + request.path);
-    switch (request.path) {
-        case '/':
-            result.sendFile(path.resolve(__dirname + '/../www/index.html'));
-            break;
-        case '/admin':
-            result.sendFile(path.resolve(__dirname + '/../www/admin/admin.html'));
-            break;
-        case '/admin.js':
-            result.sendFile(path.resolve(__dirname + '/../www/admin/admin.js'));
-            break;
-        case '/client':
-            result.sendFile(path.resolve(__dirname + '/../www/client/client.html'));
-            break;
-        case '/client.js':
-            result.sendFile(path.resolve(__dirname + '/../www/client/client.js'));
-            break;
-        case '/booking':
-            if (!request.query.id) result.sendStatus(403);
-            result.sendFile(path.resolve(__dirname + '/../www/client/booking.html'));
-            break;
-        case '/booking.js':
-            result.sendFile(path.resolve(__dirname + '/../www/client/booking.js'));
-            break;
-        default:
-            result.sendStatus(403);
-            break;
-    }
-});
-
 exports.init = (port, rpc_config, modules, callback) => {
     const services = rpc_config.services;
     const service_names = Object.keys(rpc_config.services);
-    const env = modules;
+
+    app.get("*", async (request, result) => {
+        console.error('* : ' + request.path);
+
+        switch (request.path) {
+            case '/':
+                result.sendFile(path.resolve(__dirname + '/../www/index.html'));
+                break;
+            case '/admin':
+                result.sendFile(path.resolve(__dirname + '/../www/admin/admin.html'));
+                break;
+            case '/admin.js':
+                result.sendFile(path.resolve(__dirname + '/../www/admin/admin.js'));
+                break;
+        }
+
+        if (! await modules.auth(cookies.login_token)) {
+            esult.sendStatus(403);
+        }
+
+        switch (request.path) {
+            case '/client':
+                result.sendFile(path.resolve(__dirname + '/../www/client/client.html'));
+                break;
+            case '/client.js':
+                result.sendFile(path.resolve(__dirname + '/../www/client/client.js'));
+                break;
+            case '/booking':
+                if (!request.query.id) result.sendStatus(403);
+                result.sendFile(path.resolve(__dirname + '/../www/client/booking.html'));
+                break;
+            case '/booking.js':
+                result.sendFile(path.resolve(__dirname + '/../www/client/booking.js'));
+                break;
+            default:
+                result.sendStatus(403);
+                break;
+        }
+    });
 
     async.each(service_names, (service_name, done) => {
+        const env = modules;
         const handler = services[service_name].handler;
+        const useAuth = services[service_name].useAuth;
 
-        app.post(service_name, (request, response) => {
+        app.post(service_name, async (request, response) => {
             const method = request.body.method;
             const params = request.body.params;
             const service_handler = handler[method];
+            const set_cookie = function (name, value, options) {
+                response.cookie(name, value, options)
+            }
+            const cookies = request.cookies;
 
             if (service_handler == undefined) {
                 const data = {
@@ -71,6 +86,20 @@ exports.init = (port, rpc_config, modules, callback) => {
             }
 
             console.debug("POST to " + service_name);
+
+            if (service_name === '/account') {
+                env.set_cookie = set_cookie;
+                env.cookies = cookies;
+            }
+
+            if (useAuth) {
+                if (! await env.auth(cookies.login_token)) {
+                    const data = {
+                        message: "Not logged in"
+                    };
+                    return send_error(data, response);
+                }
+            }
 
             service_handler(env, params, (err, res) => {
                 if (err) {

@@ -47,9 +47,22 @@ const init_db = (callback) => {
     });
 }
 
+function init_auth(callback) {
+    async function auth(token) {
+        //this.user_id = user_token
+        if (token)
+            return true;
+        else
+            return false;
+    }
+    modules['auth'] = auth;
+    callback(null);
+}
+
 function load_modules(callback) {
     async.series([
-        init_db
+        init_db,
+        init_auth
     ], (err) => {
         if (err) {
             console.debug(err);

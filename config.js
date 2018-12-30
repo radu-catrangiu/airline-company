@@ -1,5 +1,5 @@
 const schemas = {
-    employees: {
+    instances: {
 
     },
     members: {
@@ -53,7 +53,7 @@ const schemas = {
 };
 
 const indexes = {
-    employees: undefined,
+    instances: undefined,
     members: undefined,
     planes: undefined,
     bookings: undefined,
@@ -70,7 +70,7 @@ module.exports = {
         db: "bd2",
         collections: {
             bookings: "bookings",
-            employees: "employees",
+            instances: "instances",
             members: "members",
             planes: "planes",
             tickets: "tickets"
