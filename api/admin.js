@@ -10,7 +10,9 @@ exports.insert = async (env, params, done) => {
         "departure_day": params.departure_day,
         "duration": params.duration,
         "seats": params.seats,
-        "cost": params.cost
+        "cost": params.cost,
+        "booked" : 0,
+        "bought" : 0
     };
 
     try {

@@ -5,22 +5,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vue CDN</title>
+    <title>Sign in or Sign up</title>
+    <!-- IE -->
+    <link rel="shortcut icon" type="image/x-icon" href="/resources/favicon.ico" />
+    <!-- other browsers -->
+    <link rel="icon" type="image/x-icon" href="/resources/favicon.ico" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
 </head>
 
 <body>
     <div id="app">
-        {{ message }}
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+                    <h2>Sign in or Sign up</h2>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#signin">Sign in</a></li>
+                        <li><a data-toggle="tab" href="#signup">Sign up</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="signin" class="tab-pane fade in active">
+                            <h3>SIGN IN</h3>
+                            <div class="form-group">
+                                <input v-model="signin.email" type="text" name="email" placeholder="Email..." class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input v-model="signin.password" type="password" name="password" placeholder="Password..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button v-on:click="sign_in()" type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                        <div id="signup" class="tab-pane fade">
+                            <h3>SIGN UP</h3>
+                            <p>You will receive an email to verify your account.</p>
+                            <div class="form-group">
+                                <input v-model="signup.name" type="text" name="name" placeholder="Name..." class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input v-model="signup.email" type="text" name="email" placeholder="Email..." class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input v-model="signup.age" type="number" size="4" name="age" placeholder="Age..." min="18"
+                                    required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input v-model="signup.password" type="password" name="password" placeholder="Password..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input v-model="signup.password2" type="password" name="password2" placeholder="Verify password..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button v-on:click="sign_up()" type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="/resources/vue.js"></script>
+    <script src="/resources/axios.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/resources/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
-                message: 'Hello Vue!'
+                signup: {
+                    name: "",
+                    email: "",
+                    age: null,
+                    password: "",
+                    password2: ""
+                },
+                signin: {
+                    email: "",
+                    password: ""
+                }
+            },
+            methods: {
+                sign_in() {
+                    var data = this.signup;
+                    if (
+                        data.email.length > 3 &&
+                        data.password > 3
+                    ) {
+                        console.log("signin");
+                    } else {
+                        console.log("signin: fill required fields");
+                    }
+                },
+                sign_up() {
+                    var data = this.signup;
+                    if (
+                        data.name.length > 3 &&
+                        data.email.length > 3 &&
+                        data.age > 18 &&
+                        data.password > 3 &&
+                        data.password === data.password2
+                    ) {
+                        console.log("signup");
+                    } else {
+                        console.log("signup: fill required fields");
+                    }
+                }
             }
-        })
+        });
 
     </script>
 </body>
