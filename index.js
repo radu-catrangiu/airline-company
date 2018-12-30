@@ -16,8 +16,8 @@ const rpc_config = {
 			"useDestination": false,
 			// "validationSchema": schema
         },
-        "/login" : {
-			"handler": require('./api/login.js'),
+        "/client" : {
+			"handler": require('./api/client.js'),
 			"useAuth": "BACKEND_TOKEN",
 			"useDestination": false,
 			// "validationSchema": schema

@@ -1,0 +1,140 @@
+<html>
+
+<head>
+    <title>Client</title>
+    <!-- IE -->
+    <link rel="shortcut icon" type="image/x-icon" href="/resources/favicon.ico" />
+    <!-- other browsers -->
+    <link rel="icon" type="image/x-icon" href="/resources/favicon.ico" />
+    <link rel="stylesheet" href="/resources/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+</head>
+
+<body style="background-color: #f5f5f5;">
+    <style>
+        .vertical-center {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+    </style>
+    <div id="app" class="vertical-center">
+
+        <div class="container">
+            <div class="card mt-3" style="width: auto;">
+                <div class="card-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input v-model="flight_data.source" type="text" class="form-control" id="inputSource"
+                                placeholder="Source">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input v-model="flight_data.destination" type="text" class="form-control" id="inputDestination"
+                                placeholder="Destination">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <input v-model="flight_data.departure_day" type="number" class="form-control" id="inputDepartureDay"
+                                placeholder="Departure Day">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input v-model="flight_data.max_flights" type="number" class="form-control" id="inputMaxFlights"
+                                placeholder="Max Flights">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <button v-on:click="search()" type="submit" class="btn btn-primary btn-block">Search</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div v-if="search_case == 0" class="card mt-3" style="width: auto;">
+                <div class="card-body">
+                    <div class="text-center ">
+                        <h2>Search for a flight!</h2>
+                    </div>
+                </div>
+            </div>
+            <div v-if="search_case == 1" class="card mt-3" style="width: auto;">
+                <div class="card-body">
+                    <div class="text-center ">
+                        <h2>No flights found</h2>
+                    </div>
+                </div>
+            </div>
+            <div v-if="search_case == 2" class="card mt-3" style="width: auto;">
+                <div class="card-body">
+                    <div class="row">
+                        <div v-for="(flight, index) in flights" class="col-sm-6">
+                            <div class="card my-2">
+                                <div class="card-body">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="font-weight-bold mb-1">
+                                            {{ flight.source | capitalize}} to {{flight.destination | capitalize}}
+                                        </h5>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">Departure hour: {{ flight.departure_hour }}</div>
+                                            <div class="col">Departure day: {{ flight.departure_day }}</div>
+                                            <div class="w-100"></div>
+                                            <div class="col">Flight duration: {{ flight.duration }}</div>
+                                            <div class="col">Remaining seats: {{ flight.seats }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button v-on:click="book_flights()" type="button" class="btn btn-block btn-warning">Make
+                                Reservation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="!booking_error && booking_response_link && show_booking_response" class="card mt-3" style="width: auto;">
+                <div class="card-body">
+                    <div class="text-center ">
+                        <h2><a target="_blank" class="badge badge-success" v-bind:href="booking_response_link">Link to reservation</a></h2>
+                        <p>{{booking_response_link}}</p>
+                    </div>
+                </div>
+            </div>
+            <div v-if="booking_error" class="card mt-3" style="width: auto;">
+                <div class="card-body">
+                    <div class="text-center ">
+                        <h2><span class="badge badge-danger">{{booking_error}}</span></h2>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/resources/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="/resources/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="/resources/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <script src="/resources/vue.js"></script>
+    <script src="/resources/axios.min.js"></script>
+    <script src="/resources/tv4.min.js"></script>
+
+    <script src="client.js">
+
+    </script>
+
+</body>
+
+</html>
