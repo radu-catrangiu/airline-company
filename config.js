@@ -1,15 +1,57 @@
 const schemas = {
-    instances: {
-
+    login_tokens: {
+        bsonType: "object",
+        properties: {
+            id: {
+                bsonType: "string"
+            },
+            user_id: {
+                bsonType: "string"
+            }
+        }
     },
     members: {
-
+        bsonType: "object",
+        properties: {
+            id: {
+                bsonType: "string"
+            },
+            name: {
+                bsonType: "string",
+                minLength: 3
+            },
+            email: {
+                bsonType: "string",
+                minLength: 3
+            },
+            password: {
+                bsonType: "string",
+                minLength: 3
+            },
+            age: {
+                bsonType: "int"
+            }
+        }
     },
     planes: {
 
     },
     bookings: {
-
+        bsonType: "object",
+        properties: {
+            id: {
+                bsonType: "string"
+            },
+            flight_ids: {
+                bsonType: "array",
+                items: {
+                    bsonType: "string"
+                }
+            },
+            bought: {
+                bsonType: "boolean"
+            }
+        }
     },
     tickets: {
         bsonType: "object",
@@ -53,10 +95,18 @@ const schemas = {
 };
 
 const indexes = {
-    instances: undefined,
-    members: undefined,
+    login_tokens: {
+        id: 1,
+        user_id: 1
+    },
+    members: {
+        id: 1,
+        email: 1
+    },
     planes: undefined,
-    bookings: undefined,
+    bookings: {
+        id: 1
+    },
     tickets: {
         id: 1
     }
@@ -70,7 +120,7 @@ module.exports = {
         db: "bd2",
         collections: {
             bookings: "bookings",
-            instances: "instances",
+            login_tokens: "login_tokens",
             members: "members",
             planes: "planes",
             tickets: "tickets"

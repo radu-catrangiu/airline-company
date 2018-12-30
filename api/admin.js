@@ -16,7 +16,7 @@ exports.insert = async (env, params, done) => {
     };
 
     try {
-        await env.tickets.insertOne(data, true);
+        await env.tickets.insertOne(data);
         done(null, { id: data.id });
     } catch (error) {
         console.log(error);

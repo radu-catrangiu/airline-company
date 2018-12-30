@@ -41,7 +41,7 @@ exports.init = (port, rpc_config, modules, callback) => {
         }
 
         if (! await modules.auth(cookies.login_token)) {
-            esult.sendStatus(403);
+            return result.sendStatus(403);
         }
 
         switch (request.path) {
@@ -122,7 +122,7 @@ function send_result(data, response) {
         "result": {}
     };
 
-    if (data instanceof Array || data instanceof String) {
+    if (data instanceof Array || typeof data === 'string') {
         jsonrpc.result = data;
     } else {
         Object.assign(jsonrpc.result, data);
@@ -138,6 +138,11 @@ function send_error(data, response) {
         "error": {}
     };
 
-    Object.assign(jsonrpc.error, data);
+    if (data instanceof Array || typeof data === 'string') {
+        jsonrpc.error = data;
+    } else {
+        Object.assign(jsonrpc.error, data);
+    }
+    
     response.send(jsonrpc);
 }

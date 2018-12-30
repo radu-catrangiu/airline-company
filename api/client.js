@@ -52,7 +52,7 @@ exports.book_ticket = async (env, data, done) => {
     }
 
     try {
-        await env.bookings.insertOne(post, true);
+        await env.bookings.insertOne(post);
         return done(null, { id: post.id });
     } catch (error) {
         console.log(error);
