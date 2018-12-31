@@ -1,6 +1,25 @@
 const uuidv4 = require('uuidv4');
 const admin = require('./admin');
 
+
+exports.get_user_info = async (env, params, done) => {
+    if (! env.user_id) {
+        return done("Invalid token");
+    }
+
+    let result;
+    try {
+        result = await env.users.findOne({ id: env.user_id });
+        if (result) {
+            done(null, result.name);
+        } else {
+            done("No user found");
+        }
+    } catch (error) {
+        done("Could not retrieve user");
+    }
+}
+
 exports.get_optimal_route = (env, params, done) => {
     params.source = params.source.toLowerCase();
     params.destination = params.destination.toLowerCase();
@@ -125,7 +144,7 @@ exports.get_booking = async (env, data, done) => {
             seats: f.seats
         }
     })
-    
+
     done(null, { flights, bought: already_bought });
 };
 

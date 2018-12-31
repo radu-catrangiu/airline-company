@@ -10,7 +10,7 @@ const schemas = {
             }
         }
     },
-    members: {
+    users: {
         bsonType: "object",
         properties: {
             id: {
@@ -99,7 +99,7 @@ const indexes = {
         id: 1,
         user_id: 1
     },
-    members: {
+    users: {
         id: 1,
         email: 1
     },
@@ -121,7 +121,7 @@ module.exports = {
         collections: {
             bookings: "bookings",
             login_tokens: "login_tokens",
-            members: "members",
+            users: "users",
             planes: "planes",
             tickets: "tickets"
         },

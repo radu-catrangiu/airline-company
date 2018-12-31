@@ -15,7 +15,8 @@ new Vue({
             booking_error: "",
             booking_response: null,
             booking_response_link: null,
-            show_booking_response: false
+            show_booking_response: false,
+            user_name: ""
         }
     },
     filters: {
@@ -57,8 +58,29 @@ new Vue({
         }
     },
     mounted() {
+        console.log(getCookie('login_token'));
+        if (getCookie('login_token').length === 0) {
+            window.location.replace('/');
+        }
+        get_user_name(this);
     }
 });
+
+function get_user_name(self) {
+    var obj = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "get_user_info",
+        "params": {}
+    };
+    axios
+        .post('/client', obj)
+        .then(
+            response => {
+                self.user_name = response.data.result;
+            }
+        );
+}
 
 function request_optimal_route(self) {
     var obj = {
@@ -123,6 +145,22 @@ function check_errors(self) {
     }
     self.error = "";
     return valid;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
 
 var schema = {

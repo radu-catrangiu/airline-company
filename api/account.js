@@ -5,13 +5,27 @@ exports.login = async (env, params, done) => {
     let result;
 
     try {
-        result = await env.members.findOne({ email: params.email });
+        result = await env.users.findOne({ email: params.email });
     } catch (error) {
         console.log(error);
         return done({ code: 1001, error: "Database error" });
     }
 
+    if (!result) {
+        return done("User not found");
+    }
+
     if (result.password === params.password) {
+        try {
+            await env.login_tokens.insertOne({
+                id: token,
+                user_id: result.id,
+                timestamp: Date.now()
+            });
+        } catch (error) {
+            console.log(error);
+            return done("Could not create token");
+        }
         env.set_cookie("login_token", token);
         done(null, {"token" : token});
     } else {
@@ -30,7 +44,7 @@ exports.create = async (env, params, done) => {
     };
 
     try {
-        await env.members.insertOne(post);
+        await env.users.insertOne(post);
     } catch (error) {
         return done("Could not insert");
     }

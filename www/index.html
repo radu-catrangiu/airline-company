@@ -94,32 +94,92 @@
             },
             methods: {
                 sign_in() {
-                    var data = this.signup;
+                    var data = {
+                        email: this.signin.email,
+                        password: this.signin.password
+                    };
+                    console.log(data);
                     if (
                         data.email.length > 3 &&
-                        data.password > 3
+                        data.password.length > 3
                     ) {
-                        console.log("signin");
+                        var obj = {
+                            "id": 1,
+                            "jsonrpc": "2.0",
+                            "method": "login",
+                            "params": data
+                        };
+                        console.log(obj);
+                        axios
+                            .post('/account', obj)
+                            .then(response => {
+                                if (getCookie('login_token').length > 0) {
+                                    window.location.replace('/client');
+                                }
+                            });
                     } else {
                         console.log("signin: fill required fields");
                     }
                 },
                 sign_up() {
-                    var data = this.signup;
+                    var data = {
+                        name: this.signup.name,
+                        email: this.signup.email,
+                        age: this.signup.age,
+                        password: this.signup.password,
+                        password2: this.signup.password2
+                    };
+
                     if (
                         data.name.length > 3 &&
                         data.email.length > 3 &&
                         data.age > 18 &&
-                        data.password > 3 &&
+                        data.password.length > 3 &&
                         data.password === data.password2
                     ) {
-                        console.log("signup");
+                        var obj = {
+                            "id": 1,
+                            "jsonrpc": "2.0",
+                            "method": "create",
+                            "params": data
+                        };
+                        console.log(obj);
+                        axios
+                            .post('/account', obj)
+                            .then(response => {
+                                if (getCookie('login_token').length > 0) {
+                                    window.location.replace('/client');
+                                }
+                            });
                     } else {
                         console.log("signup: fill required fields");
                     }
                 }
+            },
+            mounted() {
+                console.log(getCookie('login_token'))
+                if (getCookie('login_token').length > 0) {
+                    window.location.replace('/client');
+                }
             }
         });
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
 
     </script>
 </body>

@@ -35,10 +35,14 @@ const init_db = (callback) => {
                 modules[collections[name]] = db.collection(name);
 
                 if (indexes[name]) {
-                    db.collection(name).createIndex(indexes[name], {
-                        unique: true,
-                        background: true
-                    });
+                    for (let key in indexes[name]) {
+                        const obj = {};
+                        obj[key] = indexes[name][key];
+                        db.collection(name).createIndex(obj, {
+                            unique: true,
+                            background: true
+                        });
+                    }
                 }
             });
 
@@ -49,11 +53,19 @@ const init_db = (callback) => {
 
 function init_auth(callback) {
     async function auth(token) {
-        //this.user_id = user_token
-        if (token)
-            return true;
-        else
+        let result = null;
+        try {
+            result = await modules.login_tokens.findOne({id: token});
+        } catch (error) {
+            console.log(error);
             return false;
+        }
+        if (result) {
+            this.user_id = result.user_id;
+            return true;
+        } else {
+            return false;
+        }
     }
     modules['auth'] = auth;
     callback(null);

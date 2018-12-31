@@ -26,18 +26,16 @@ exports.init = (port, rpc_config, modules, callback) => {
     const service_names = Object.keys(rpc_config.services);
 
     app.get("*", async (request, result) => {
+        const cookies = request.cookies;
         console.error('* : ' + request.path);
 
         switch (request.path) {
             case '/':
-                result.sendFile(path.resolve(__dirname + '/../www/index.html'));
-                break;
+                return result.sendFile(path.resolve(__dirname + '/../www/index.html'));
             case '/admin':
-                result.sendFile(path.resolve(__dirname + '/../www/admin/admin.html'));
-                break;
+                return result.sendFile(path.resolve(__dirname + '/../www/admin/admin.html'));
             case '/admin.js':
-                result.sendFile(path.resolve(__dirname + '/../www/admin/admin.js'));
-                break;
+                return result.sendFile(path.resolve(__dirname + '/../www/admin/admin.js'));
         }
 
         if (! await modules.auth(cookies.login_token)) {
@@ -97,6 +95,7 @@ exports.init = (port, rpc_config, modules, callback) => {
                     const data = {
                         message: "Not logged in"
                     };
+                    set_cookie('login_token', "");
                     return send_error(data, response);
                 }
             }
@@ -143,6 +142,6 @@ function send_error(data, response) {
     } else {
         Object.assign(jsonrpc.error, data);
     }
-    
+
     response.send(jsonrpc);
 }
