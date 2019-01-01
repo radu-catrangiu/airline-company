@@ -86,7 +86,11 @@ function stats_list(self) {
     axios
         .post('/stats', obj)
         .then(
-            response => self.stats = response.data.result
+            response => self.stats = response.data.result.map(elem => {
+                elem.id = elem._id;
+                elem._id = "People in their " + elem.id;
+                return elem;
+            })
         );
 }
 

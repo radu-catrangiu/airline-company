@@ -3,38 +3,48 @@ exports.update = (env, params, done) => {
         function mapFunc() {
             const key = (parseInt(this.age / 10) * 10) + 's';
 
-            emit({type: "bought", key}, {
+            emit(key, {
                 count: 1,
-                flights: this.tickets_bought.reduce((acc, val) => acc + val.flights, 0),
-                cost: this.tickets_bought.reduce((acc, val) => acc + val.cost, 0)
-            });
-
-            emit({type: "booked", key}, {
-                count: 1,
-                flights: this.tickets_booked.reduce((acc, val) => acc + val.flights, 0),
-                cost: this.tickets_booked.reduce((acc, val) => acc + val.cost, 0)
+                bought: {
+                    flights: this.tickets_bought.reduce((acc, val) => acc + val.flights, 0),
+                    cost: this.tickets_bought.reduce((acc, val) => acc + val.cost, 0)
+                },
+                booked: {
+                    flights: this.tickets_booked.reduce((acc, val) => acc + val.flights, 0),
+                    cost: this.tickets_booked.reduce((acc, val) => acc + val.cost, 0)
+                }
             });
         },
         function reduceFunc(key, values) {
             let obj = {
                 count: 0,
-                flights: 0,
-                cost: 0
+                bought: {
+                    flights: 0,
+                    cost: 0
+                },
+                booked: {
+                    flights: 0,
+                    cost: 0
+                }
             }
             for (let i = 0; i < values.length; i++) {
                 obj.count += values[i].count;
-                obj.flights += values[i].flights;
-                obj.cost += values[i].cost;
+                obj.bought.flights += values[i].bought.flights;
+                obj.bought.cost += values[i].bought.cost;
+                obj.booked.flights += values[i].booked.flights;
+                obj.booked.cost += values[i].booked.cost;
             }
             return obj;
         },
         {
             out: "stats",
             finalize: function (key, value) {
-                if (value.flights === 0) {
-                    value.avg_cost = 0;
-                } else {
-                    value.avg_cost = value.cost / value.flights;
+                for (k of ['bought', 'booked']) {
+                    if (value[k].flights === 0) {
+                        value[k].avg_cost = 0;
+                    } else {
+                        value[k].avg_cost = value[k].cost / value[k].flights;
+                    }
                 }
 
                 return value;
@@ -51,7 +61,7 @@ exports.list = async (env, params, done) => {
     try {
         result = await cursor.toArray();
     } catch (error) {
-        return done({ error: 'Failed to list items'});
+        return done({ error: 'Failed to list items' });
     }
 
     done(null, result);
