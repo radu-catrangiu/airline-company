@@ -12,7 +12,8 @@ new Vue({
                 "seats": 0
             },
             clear_data: false,
-            error: ""
+            error: "",
+            stats: {}
         }
     },
     filters: {
@@ -21,6 +22,9 @@ new Vue({
                 return value.toUpperCase();
             else
                 return 'UNDEFINED'
+        },
+        pretty(value) {
+            return JSON.stringify(value, null, 4);
         }
     },
     methods: {
@@ -46,12 +50,45 @@ new Vue({
         },
         f_create_cancel() {
             reset_data(this);
+        },
+        stats_update() {
+            stats_update();
+            stats_list(this);
         }
     },
     mounted() {
         refresh(this);
+        stats_list(this);
     }
 });
+
+function stats_update() {
+    var obj = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "update",
+        "params": {}
+    };
+    axios
+        .post('/stats', obj)
+        .then(
+            response => console.log("Stats updated!")
+        );
+}
+
+function stats_list(self) {
+    var obj = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "list",
+        "params": {}
+    };
+    axios
+        .post('/stats', obj)
+        .then(
+            response => self.stats = response.data.result
+        );
+}
 
 function refresh(self) {
     var obj = {

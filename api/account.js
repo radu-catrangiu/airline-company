@@ -20,7 +20,7 @@ exports.login = async (env, params, done) => {
             await env.login_tokens.insertOne({
                 id: token,
                 user_id: result.id,
-                timestamp: Date.now()
+                expiry: new Date()
             });
         } catch (error) {
             console.log(error);

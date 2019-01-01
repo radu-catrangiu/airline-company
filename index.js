@@ -14,6 +14,10 @@ const rpc_config = {
             "handler": require('./api/admin.js'),
             "useAuth": false
         },
+        "/stats": {
+            "handler": require('./api/stats.js'),
+            "useAuth": false
+        },
         "/client" : {
             "handler": require('./api/client.js'),
             "useAuth": true

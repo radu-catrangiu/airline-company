@@ -44,6 +44,13 @@ const init_db = (callback) => {
                         });
                     }
                 }
+
+                if (name === 'login_tokens') {
+                    db.collection(name).createIndex({expiry: 1}, {
+                        expireAfterSeconds: 3600,
+                        background: true
+                    });
+                }
             });
 
             callback(null);

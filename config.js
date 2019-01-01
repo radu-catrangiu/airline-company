@@ -33,7 +33,7 @@ const schemas = {
             }
         }
     },
-    planes: {
+    stats: {
 
     },
     bookings: {
@@ -102,7 +102,7 @@ const indexes = {
         id: 1,
         email: 1
     },
-    planes: undefined,
+    stats: undefined,
     bookings: {
         id: 1
     },
@@ -121,7 +121,7 @@ module.exports = {
             bookings: "bookings",
             login_tokens: "login_tokens",
             users: "users",
-            planes: "planes",
+            stats: "stats",
             tickets: "tickets"
         },
         schemas: schemas,
