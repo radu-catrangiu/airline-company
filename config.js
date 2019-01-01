@@ -96,8 +96,7 @@ const schemas = {
 
 const indexes = {
     login_tokens: {
-        id: 1,
-        user_id: 1
+        id: 1
     },
     users: {
         id: 1,

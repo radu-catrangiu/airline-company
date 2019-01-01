@@ -76,7 +76,15 @@ exports.book_ticket = async (env, data, done) => {
         await env.bookings.insertOne(post);
         await env.users.updateOne(
             { id: env.user_id },
-            { $push: { tickets_booked: post.id } }
+            {
+                $push: {
+                    tickets_booked: {
+                        ticket: post.id,
+                        flights: post.flight_ids.length,
+                        cost: result.reduce((acc, f) => acc + f.cost, 0)
+                    }
+                }
+            }
         );
         return done(null, { id: post.id });
     } catch (error) {
@@ -114,13 +122,14 @@ exports.buy_ticket = async (env, data, done) => {
             { id: data.booking_id },
             { $set: { bought: true } }
         );
+        const user = await env.users.findOne({ id: env.user_id });
+        const ticket = user.tickets_booked.find(elem => elem.ticket === data.booking_id);
         await env.users.updateOne(
             { id: env.user_id },
-            { $pull: { tickets_booked: data.booking_id } }
-        );
-        await env.users.updateOne(
-            { id: env.user_id },
-            { $push: { tickets_bought: data.booking_id } }
+            {
+                $pull: { tickets_booked: { ticket: data.booking_id } },
+                $push: { tickets_bought: ticket }
+            }
         );
         return done(null, { status: 0 });
     } catch (error) {
@@ -155,7 +164,8 @@ exports.get_booking = async (env, data, done) => {
             duration: f.duration,
             source: f.source,
             destination: f.destination,
-            seats: f.seats
+            seats: f.seats,
+            cost: f.cost
         }
     })
 

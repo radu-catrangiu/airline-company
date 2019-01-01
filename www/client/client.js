@@ -88,7 +88,7 @@ function get_user_info(self) {
                         "jsonrpc": "2.0",
                         "method": "get_booking",
                         "params": {
-                            "code": elem
+                            "code": elem.ticket
                         }
                     };
                     axios
@@ -100,7 +100,7 @@ function get_user_info(self) {
                             self.tickets_booked.push({
                                 source: flights[0].source,
                                 destination: flights[n].destination,
-                                link: '/booking?id=' + elem
+                                link: '/booking?id=' + elem.ticket
                             });
                         });
                 });
@@ -110,7 +110,7 @@ function get_user_info(self) {
                         "jsonrpc": "2.0",
                         "method": "get_booking",
                         "params": {
-                            "code": elem
+                            "code": elem.ticket
                         }
                     };
                     axios
@@ -122,7 +122,7 @@ function get_user_info(self) {
                             self.tickets_bought.push({
                                 source: flights[0].source,
                                 destination: flights[n].destination,
-                                link: '/booking?id=' + elem
+                                link: '/booking?id=' + elem.ticket
                             });
                         });
                 });
