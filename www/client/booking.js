@@ -66,6 +66,7 @@ var app = new Vue({
             .then(
                 response => {
                     this.flights = response.data.result.flights;
+                    this.flights.reverse();
                     this.bought = response.data.result.bought;
                     this.plural = this.flights.length > 1 ? "s" : "";
                 }

@@ -27,7 +27,33 @@
         <div class="modal fade user-info" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    ...
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tickets</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Booked</h2>
+                        <div v-for="ticket in tickets_booked">
+                            <p>
+                                <a target="_blank" class="badge badge-warning" v-bind:href="ticket.link">
+                                    {{ ticket.source | capitalize}} to {{ticket.destination | capitalize}}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="modal-body">
+                        <h2>Bought</h2>
+                        <div v-for="ticket in tickets_bought">
+                            <p>
+                                <a target="_blank" class="badge badge-warning" v-bind:href="ticket.link">
+                                    {{ ticket.source | capitalize}} to {{ticket.destination | capitalize}}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -16,7 +16,9 @@ new Vue({
             booking_response: null,
             booking_response_link: null,
             show_booking_response: false,
-            user_name: ""
+            user_name: "",
+            tickets_booked: [],
+            tickets_bought: []
         }
     },
     filters: {
@@ -62,11 +64,11 @@ new Vue({
         if (getCookie('login_token').length === 0) {
             window.location.replace('/');
         }
-        get_user_name(this);
+        get_user_info(this);
     }
 });
 
-function get_user_name(self) {
+function get_user_info(self) {
     var obj = {
         "id": 1,
         "jsonrpc": "2.0",
@@ -77,7 +79,53 @@ function get_user_name(self) {
         .post('/client', obj)
         .then(
             response => {
-                self.user_name = response.data.result;
+                var tickets_booked = response.data.result.tickets_booked;
+                var tickets_bought = response.data.result.tickets_bought;
+                self.user_name = response.data.result.name;
+                tickets_booked.forEach(elem => {
+                    var obj = {
+                        "id": 1,
+                        "jsonrpc": "2.0",
+                        "method": "get_booking",
+                        "params": {
+                            "code": elem
+                        }
+                    };
+                    axios
+                        .post('/client', obj)
+                        .then(response => {
+                            var flights = response.data.result.flights;
+                            var n = flights.length - 1;
+                            flights.reverse();
+                            self.tickets_booked.push({
+                                source: flights[0].source,
+                                destination: flights[n].destination,
+                                link: '/booking?id=' + elem
+                            });
+                        });
+                });
+                tickets_bought.forEach(elem => {
+                    var obj = {
+                        "id": 1,
+                        "jsonrpc": "2.0",
+                        "method": "get_booking",
+                        "params": {
+                            "code": elem
+                        }
+                    };
+                    axios
+                        .post('/client', obj)
+                        .then(response => {
+                            var flights = response.data.result.flights;
+                            var n = flights.length - 1;
+                            flights.reverse();
+                            self.tickets_bought.push({
+                                source: flights[0].source,
+                                destination: flights[n].destination,
+                                link: '/booking?id=' + elem
+                            });
+                        });
+                });
             }
         );
 }

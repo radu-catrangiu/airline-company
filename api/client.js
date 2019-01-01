@@ -1,9 +1,8 @@
 const uuidv4 = require('uuidv4');
 const admin = require('./admin');
 
-
 exports.get_user_info = async (env, params, done) => {
-    if (! env.user_id) {
+    if (!env.user_id) {
         return done("Invalid token");
     }
 
@@ -11,7 +10,10 @@ exports.get_user_info = async (env, params, done) => {
     try {
         result = await env.users.findOne({ id: env.user_id });
         if (result) {
-            done(null, result.name);
+            delete result._id;
+            delete result.id;
+            delete result.password;
+            done(null, result);
         } else {
             done("No user found");
         }
@@ -72,6 +74,10 @@ exports.book_ticket = async (env, data, done) => {
 
     try {
         await env.bookings.insertOne(post);
+        await env.users.updateOne(
+            { id: env.user_id },
+            { $push: { tickets_booked: post.id } }
+        );
         return done(null, { id: post.id });
     } catch (error) {
         console.log(error);
@@ -104,9 +110,17 @@ exports.buy_ticket = async (env, data, done) => {
     }
 
     try {
-        env.bookings.updateOne(
+        await env.bookings.updateOne(
             { id: data.booking_id },
             { $set: { bought: true } }
+        );
+        await env.users.updateOne(
+            { id: env.user_id },
+            { $pull: { tickets_booked: data.booking_id } }
+        );
+        await env.users.updateOne(
+            { id: env.user_id },
+            { $push: { tickets_bought: data.booking_id } }
         );
         return done(null, { status: 0 });
     } catch (error) {

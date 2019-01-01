@@ -157,9 +157,25 @@
                 }
             },
             mounted() {
-                console.log(getCookie('login_token'))
-                if (getCookie('login_token').length > 0) {
-                    window.location.replace('/client');
+                var token = getCookie('login_token');
+
+                if (token.length > 0) {
+                    var obj = {
+                        "id": 1,
+                        "jsonrpc": "2.0",
+                        "method": "check_token",
+                        "params": {
+                            "token": token
+                        }
+                    };
+
+                    axios
+                        .post('/account', obj)
+                        .then(response => {
+                            if (response.data.result) {
+                                window.location.replace('/client');
+                            }
+                        });
                 }
             }
         });
