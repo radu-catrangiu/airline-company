@@ -27,7 +27,7 @@ exports.login = async (env, params, done) => {
             return done("Could not create token");
         }
         env.set_cookie("login_token", token);
-        done(null, {"token" : token});
+        done(null, { "token": token });
     } else {
         done("Wrong password");
     }
@@ -40,7 +40,8 @@ exports.create = async (env, params, done) => {
         email: params.email,
         age: params.age,
         password: params.password,
-        expenses: 0
+        tickets_booked: [],
+        tickets_bought: []
     };
 
     try {
@@ -51,9 +52,28 @@ exports.create = async (env, params, done) => {
 
     exports.login(env, post, (err, res) => {
         if (!err) {
-            return done(null, {status: 0});
+            return done(null, { status: 0 });
         } else {
             return done(err);
         }
     });
+}
+
+exports.check_token = async (env, params, done) => {
+    if (!params.token || params.token.length === 0) {
+        return done("Invalid token");
+    }
+
+    let result;
+    try {
+        result = await env.login_tokens.findOne({ id: params.token });
+    } catch (error) {
+        return done("Database error");
+    }
+
+    if (result) {
+        return done(null, "Valid token");
+    } else {
+        return done("Invalid token");
+    }
 }
