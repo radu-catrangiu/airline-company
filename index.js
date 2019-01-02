@@ -31,17 +31,18 @@ const rpc_config = {
 
 modules.load_modules((err, modules) => {
     if (err) {
-        console.log(err);
+        console.debug(err);
         process.exit(1);
     }
 
     server.init(config.port, rpc_config, modules, (err, res) => {
         if (err) {
-            console.log(err);
+            console.debug(err);
             process.exit(1);
         }
 
         console.log("Server started on port " + config.port);
+        console.log("http://localhost:" + config.port + "/");
     });
 });
 

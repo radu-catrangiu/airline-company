@@ -13,7 +13,9 @@ new Vue({
             },
             clear_data: false,
             error: "",
-            stats: {}
+            stats: {},
+            statsUpdateBtnClass: "btn btn-primary",
+            statsUpdateBtnDisabled: false
         }
     },
     filters: {
@@ -40,7 +42,7 @@ new Vue({
             this.flight_data.seats = parseInt(this.flight_data.seats);
 
             var valid = check_errors(this);
-            console.log(valid);
+
             if (valid) {
                 $('.modal').modal('hide');
                 insert_post(this.flight_data);
@@ -52,8 +54,14 @@ new Vue({
             reset_data(this);
         },
         stats_update() {
-            stats_update();
-            stats_list(this);
+            this.statsUpdateBtnClass = "btn btn-secondary";
+            this.statsUpdateBtnDisabled = true;
+            stats_update(this);
+            setTimeout(() => {
+                stats_list(this);
+                this.statsUpdateBtnClass = "btn btn-primary";
+                this.statsUpdateBtnDisabled = false;
+            }, 2500);
         }
     },
     mounted() {
@@ -62,7 +70,7 @@ new Vue({
     }
 });
 
-function stats_update() {
+function stats_update(self) {
     var obj = {
         "id": 1,
         "jsonrpc": "2.0",
@@ -72,7 +80,9 @@ function stats_update() {
     axios
         .post('/stats', obj)
         .then(
-            response => console.log("Stats updated!")
+            response => {
+                console.log("Stats updated!");
+            }
         );
 }
 
@@ -142,7 +152,6 @@ function insert_post(params) {
 }
 
 function check_errors(self) {
-    console.log(self.flight_data);
     var pretty_name = {
         source: 'Source',
         destination: 'Destination',

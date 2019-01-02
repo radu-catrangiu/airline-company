@@ -148,7 +148,6 @@ function request_optimal_route(self) {
                 if (self.flights instanceof Array) {
                     self.flights.reverse();
                 }
-                console.log(response);
             }
         );
 }

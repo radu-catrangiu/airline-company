@@ -6,8 +6,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/resources/favicon.ico" />
     <!-- other browsers -->
     <link rel="icon" type="image/x-icon" href="/resources/favicon.ico" />
-    <link rel="stylesheet" href="/resources/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="/resources/bootstrap.min.css" crossorigin="anonymous">
 
 </head>
 
@@ -86,7 +85,10 @@
                         </div>
                     </div>
                     <div class="modal-footer ">
-                        <button v-on:click="stats_update" type="button" class="btn btn-secondary">Update</button>
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <button v-on:click="stats_update" type="button" v-bind:class="statsUpdateBtnClass" :disabled="statsUpdateBtnDisabled">Update</button>
                     </div>
                 </div>
             </div>
@@ -224,12 +226,9 @@
 
     </div>
 
-    <script type="text/javascript" src="/resources/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/resources/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/resources/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/resources/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/resources/popper.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/resources/bootstrap.min.js" crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="/resources/vue.js"></script>
     <script type="text/javascript" src="/resources/axios.min.js"></script>

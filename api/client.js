@@ -52,7 +52,7 @@ exports.book_ticket = async (env, data, done) => {
     try {
         result = await cursor.toArray();
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 
@@ -68,7 +68,7 @@ exports.book_ticket = async (env, data, done) => {
             { $inc: { booked: 1 } }
         );
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 
@@ -88,21 +88,30 @@ exports.book_ticket = async (env, data, done) => {
         );
         return done(null, { id: post.id });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 };
 
 exports.buy_ticket = async (env, data, done) => {
     // Do something with billing data
-    console.log(data.billing_info);
-    console.log(data.booking_id);
+    console.debug(data.billing_info);
+    console.debug(data.booking_id);
+    try {
+        await env.billing_data.insertOne({
+            user_id: env.user_id,
+            booking_id: data.booking_id,
+            billing_info: data.billing_info
+        });
+    } catch (error) {
+        console.debug(error);
+    }
 
     let result;
     try {
         result = await env.bookings.findOne({ id: data.booking_id });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 
@@ -113,7 +122,7 @@ exports.buy_ticket = async (env, data, done) => {
             { $inc: { booked: -1, bought: 1 } }
         );
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 
@@ -133,7 +142,7 @@ exports.buy_ticket = async (env, data, done) => {
         );
         return done(null, { status: 0 });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 };
@@ -143,7 +152,7 @@ exports.get_booking = async (env, data, done) => {
     try {
         result = await env.bookings.findOne({ id: data.code });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1002, error: "Internal server error" });
     }
 
@@ -153,7 +162,7 @@ exports.get_booking = async (env, data, done) => {
     try {
         flights = await env.tickets.find({ id: { $in: flight_ids } }).toArray();
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1002, error: "Internal server error" });
     }
 

@@ -64,7 +64,7 @@ function init_auth(callback) {
         try {
             result = await modules.login_tokens.findOne({id: token});
         } catch (error) {
-            console.log(error);
+            console.debug(error);
             return false;
         }
         if (result) {

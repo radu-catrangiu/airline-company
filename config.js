@@ -125,6 +125,45 @@ const schemas = {
                 minimum: 1
             }
         }
+    },
+    billing_data: {
+        bsonType: "object",
+        properties: {
+            user_id: {
+                bsonType: "string"
+            },
+            booking_id: {
+                bsonType: "string"
+            },
+            billing_info: {
+                bsonType: "object",
+                properties: {
+                    card_number: {
+                        bsonType: "string",
+                        minLength: 2,
+                    },
+                    name: {
+                        bsonType: "string",
+                        minLength: 2
+                    },
+                    expiry_month: {
+                        bsonType: "int",
+                        minimum: 1,
+                        maximum: 12
+                    },
+                    expiry_year: {
+                        bsonType: "int",
+                        minimum: 18,
+                        maximum: 40
+                    },
+                    card_cvv: {
+                        bsonType: "string",
+                        minLength: 3,
+                        maxLength: 3
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -142,7 +181,8 @@ const indexes = {
     },
     tickets: {
         id: 1
-    }
+    },
+    billing_data: undefined
 }
 
 module.exports = {
@@ -156,7 +196,8 @@ module.exports = {
             login_tokens: "login_tokens",
             users: "users",
             stats: "stats",
-            tickets: "tickets"
+            tickets: "tickets",
+            billing_data: "billing_data"
         },
         schemas: schemas,
         indexes: indexes

@@ -43,7 +43,7 @@ exports.update = (env, params, done) => {
                     if (value[k].flights === 0) {
                         value[k].avg_cost = 0;
                     } else {
-                        value[k].avg_cost = value[k].cost / value[k].flights;
+                        value[k].avg_cost = Math.round(value[k].cost / value[k].flights);
                     }
                 }
 

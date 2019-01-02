@@ -7,7 +7,7 @@ exports.login = async (env, params, done) => {
     try {
         result = await env.users.findOne({ email: params.email });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         return done({ code: 1001, error: "Database error" });
     }
 
@@ -23,7 +23,7 @@ exports.login = async (env, params, done) => {
                 expiry: new Date()
             });
         } catch (error) {
-            console.log(error);
+            console.debug(error);
             return done("Could not create token");
         }
         env.set_cookie("login_token", token);

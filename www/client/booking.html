@@ -6,8 +6,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/resources/favicon.ico" />
     <!-- other browsers -->
     <link rel="icon" type="image/x-icon" href="/resources/favicon.ico" />
-    <link rel="stylesheet" href="/resources/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="/resources/bootstrap.min.css" crossorigin="anonymous">
 </head>
 
 <body>
@@ -90,6 +89,7 @@
                                         <h5 class="font-weight-bold mb-1">
                                             {{ flight.source | capitalize}} to {{flight.destination | capitalize}}
                                         </h5>
+                                        <div class="text-right"><span class="badge badge-pill badge-success">Price: {{ flight.cost }}</span></div>
                                     </div>
                                     <div class="container">
                                         <div class="row">
@@ -119,12 +119,9 @@
         </div>
     </div>
 
-    <script src="/resources/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="/resources/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="/resources/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+    <script src="/resources/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="/resources/popper.min.js" crossorigin="anonymous"></script>
+    <script src="/resources/bootstrap.min.js" crossorigin="anonymous"></script>
 
     <script src="/resources/vue.js"></script>
     <script src="/resources/axios.min.js"></script>

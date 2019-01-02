@@ -19,7 +19,7 @@ exports.insert = async (env, params, done) => {
         await env.tickets.insertOne(data);
         done(null, { id: data.id });
     } catch (error) {
-        console.log(error);
+        console.debug(error);
         done({ error: 'Failed to insert item' });
     }
 }
@@ -33,7 +33,7 @@ exports.delete = (env, params, done) => {
         env.tickets.deleteOne(data);
         done(null, { status: 0 });
     } catch(error) {
-        console.log(error);
+        console.debug(error);
         done({ error: 'Failed to delete item'});
     }
 };
