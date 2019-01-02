@@ -9,7 +9,8 @@ new Vue({
                 "departure_hour": 0,
                 "departure_day": 0,
                 "duration": 0,
-                "seats": 0
+                "seats": 0,
+                "cost": 0
             },
             clear_data: false,
             error: "",
@@ -40,6 +41,7 @@ new Vue({
             this.flight_data.departure_day = parseInt(this.flight_data.departure_day);
             this.flight_data.duration = parseInt(this.flight_data.duration);
             this.flight_data.seats = parseInt(this.flight_data.seats);
+            this.flight_data.cost = parseInt(this.flight_data.cost);
 
             var valid = check_errors(this);
 
@@ -203,6 +205,10 @@ var schema = {
         seats: {
             type: "integer",
             minimum: 0
+        },
+        cost: {
+            type: "integer",
+            minimum: 1
         }
     }
 };
