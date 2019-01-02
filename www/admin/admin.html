@@ -85,9 +85,9 @@
                         </div>
                     </div>
                     <div class="modal-footer ">
-                        <button v-on:click="stats_update" type="button" v-bind:class="statsUpdateBtnClass" :disabled="statsUpdateBtnDisabled">
-                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" :hidden="!statsUpdateBtnDisabled"></span>
-                            Update
+                        <button v-on:click="stats_update" type="button" v-bind:class="stats_update_btn_class" :disabled="stats_update_btn == 'Updating'">
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" :hidden="stats_update_btn == 'Update'"></span>
+                            {{stats_update_btn}}
                         </button>
                     </div>
                 </div>

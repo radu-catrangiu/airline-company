@@ -14,8 +14,8 @@ new Vue({
             clear_data: false,
             error: "",
             stats: {},
-            statsUpdateBtnClass: "btn btn-primary",
-            statsUpdateBtnDisabled: false
+            stats_update_btn_class: "btn btn-primary",
+            stats_update_btn: "Update"
         }
     },
     filters: {
@@ -54,13 +54,13 @@ new Vue({
             reset_data(this);
         },
         stats_update() {
-            this.statsUpdateBtnClass = "btn btn-secondary";
-            this.statsUpdateBtnDisabled = true;
+            this.stats_update_btn_class = "btn btn-secondary";
+            this.stats_update_btn = 'Updating';
             stats_update(this);
             setTimeout(() => {
                 stats_list(this);
-                this.statsUpdateBtnClass = "btn btn-primary";
-                this.statsUpdateBtnDisabled = false;
+                this.stats_update_btn_class = "btn btn-primary";
+                this.stats_update_btn = 'Update';
             }, 2500);
         }
     },
