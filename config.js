@@ -30,11 +30,45 @@ const schemas = {
             },
             age: {
                 bsonType: "int"
+            },
+            tickets_booked: {
+                bsonType: "array",
+                items: {
+                    bsonType: "object",
+                    properties: {
+                        ticket: {
+                            bsonType: "string"
+                        },
+                        flights: {
+                            bsonType: "int"
+                        },
+                        cost: {
+                            bsonType: "double"
+                        }
+                    }
+                }
+            },
+            tickets_bought: {
+                bsonType: "array",
+                items: {
+                    bsonType: "object",
+                    properties: {
+                        ticket: {
+                            bsonType: "string"
+                        },
+                        flights: {
+                            bsonType: "int"
+                        },
+                        cost: {
+                            bsonType: "double"
+                        }
+                    }
+                }
             }
         }
     },
     stats: {
-
+        bsonType: "object"
     },
     bookings: {
         bsonType: "object",
