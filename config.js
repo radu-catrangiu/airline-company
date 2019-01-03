@@ -7,6 +7,9 @@ const schemas = {
             },
             user_id: {
                 bsonType: "string"
+            },
+            expiry: {
+                bsonType: "object"
             }
         }
     },
@@ -67,7 +70,10 @@ const schemas = {
             }
         }
     },
-    stats: {
+    users_stats: {
+        bsonType: "object"
+    },
+    tickets_stats: {
         bsonType: "object"
     },
     bookings: {
@@ -175,7 +181,8 @@ const indexes = {
         id: 1,
         email: 1
     },
-    stats: undefined,
+    users_stats: undefined,
+    tickets_stats: undefined,
     bookings: {
         id: 1
     },
@@ -195,7 +202,8 @@ module.exports = {
             bookings: "bookings",
             login_tokens: "login_tokens",
             users: "users",
-            stats: "stats",
+            users_stats: "users_stats",
+            tickets_stats: "tickets_stats",
             tickets: "tickets",
             billing_data: "billing_data"
         },

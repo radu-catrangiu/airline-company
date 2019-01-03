@@ -1,4 +1,36 @@
 exports.update = (env, params, done) => {
+    if (params.collection === 'tickets') {
+        update_tickets_stats(env);
+    } else {
+        update_users_stats(env);
+    }
+
+    done(null, { "status": 0 });
+};
+
+exports.list = async (env, params, done) => {
+    let result;
+
+    if (params.collection === 'tickets') {
+        const cursor = env.tickets_stats.find();
+        try {
+            result = await cursor.toArray();
+        } catch (error) {
+            return done({ error: 'Failed to list items' });
+        }
+    } else {
+        const cursor = env.users_stats.find();
+        try {
+            result = await cursor.toArray();
+        } catch (error) {
+            return done({ error: 'Failed to list items' });
+        }
+    }
+
+    done(null, result);
+}
+
+function update_users_stats(env) {
     env.users.mapReduce(
         function mapFunc() {
             const key = (parseInt(this.age / 10) * 10) + 's';
@@ -37,7 +69,7 @@ exports.update = (env, params, done) => {
             return obj;
         },
         {
-            out: "stats",
+            out: "users_stats",
             finalize: function (key, value) {
                 for (k of ['bought', 'booked']) {
                     if (value[k].flights === 0) {
@@ -51,18 +83,42 @@ exports.update = (env, params, done) => {
             }
         }
     );
+}
 
-    done(null, { "status": 0 });
-};
+function update_tickets_stats(env) {
+    env.tickets.mapReduce(
+        function mapFunc() {
+            emit("cost", this.cost);
+            emit("potential_revenue", this.seats * this.cost);
+            emit("eventual_revenue", this.booked * this.cost);
+            emit("revenue", this.bought * this.cost);
+        },
+        function reduceFunc(key, values) {
+            let description;
+            switch (key) {
+                case "cost":
+                    description = "ticket cost";
+                    break;
+                case "potential_revenue":
+                    description = "revenue if airplane full";
+                    break;
+                case "eventual_revenue":
+                    description = "revenue if all current bookings are bought";
+                    break;
+                case "revenue":
+                    description = "current revenue";
+                    break;
+            }
+            const avg = values.reduce((acc, e) => acc + e, 0) / values.length;
+            let obj = {
+                min: Math.min(...values),
+                max: Math.max(...values),
+                avg: parseInt(avg * 100) / 100,
+                description
+            };
 
-exports.list = async (env, params, done) => {
-    let result;
-    const cursor = env.stats.find();
-    try {
-        result = await cursor.toArray();
-    } catch (error) {
-        return done({ error: 'Failed to list items' });
-    }
-
-    done(null, result);
+            return obj;
+        },
+        { out: "tickets_stats" }
+    );
 }

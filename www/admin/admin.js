@@ -16,7 +16,8 @@ new Vue({
             error: "",
             stats: {},
             stats_update_btn_class: "btn btn-primary",
-            stats_update_btn: "Update"
+            stats_update_btn: "Update",
+            tickets_stast: {}
         }
     },
     filters: {
@@ -58,9 +59,19 @@ new Vue({
         stats_update() {
             this.stats_update_btn_class = "btn btn-secondary";
             this.stats_update_btn = 'Updating';
-            stats_update(this);
+            users_stats_update(this);
             setTimeout(() => {
-                stats_list(this);
+                users_stats_list(this);
+                this.stats_update_btn_class = "btn btn-primary";
+                this.stats_update_btn = 'Update';
+            }, 2500);
+        },
+        tickets_stats_update() {
+            this.stats_update_btn_class = "btn btn-secondary";
+            this.stats_update_btn = 'Updating';
+            tickets_stats_update(this);
+            setTimeout(() => {
+                tickets_stats_list(this);
                 this.stats_update_btn_class = "btn btn-primary";
                 this.stats_update_btn = 'Update';
             }, 2500);
@@ -68,11 +79,12 @@ new Vue({
     },
     mounted() {
         refresh(this);
-        stats_list(this);
+        users_stats_list(this);
+        tickets_stats_list(this);
     }
 });
 
-function stats_update(self) {
+function users_stats_update(self) {
     var obj = {
         "id": 1,
         "jsonrpc": "2.0",
@@ -83,12 +95,30 @@ function stats_update(self) {
         .post('/stats', obj)
         .then(
             response => {
-                console.log("Stats updated!");
+                console.log("Users stats updated!");
             }
         );
 }
 
-function stats_list(self) {
+function tickets_stats_update(self) {
+    var obj = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "update",
+        "params": {
+            "collection": "tickets"
+        }
+    };
+    axios
+        .post('/stats', obj)
+        .then(
+            response => {
+                console.log("Tickets stats updated!");
+            }
+        );
+}
+
+function users_stats_list(self) {
     var obj = {
         "id": 1,
         "jsonrpc": "2.0",
@@ -103,6 +133,22 @@ function stats_list(self) {
                 elem._id = "People in their " + elem.id;
                 return elem;
             })
+        );
+}
+
+function tickets_stats_list(self) {
+    var obj = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "list",
+        "params": {
+            "collection": "tickets"
+        }
+    };
+    axios
+        .post('/stats', obj)
+        .then(
+            response => self.tickets_stast = response.data.result
         );
 }
 
