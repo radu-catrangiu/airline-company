@@ -46,7 +46,7 @@ const schemas = {
                             bsonType: "int"
                         },
                         cost: {
-                            bsonType: "double"
+                            bsonType: "int"
                         }
                     }
                 }
@@ -63,7 +63,7 @@ const schemas = {
                             bsonType: "int"
                         },
                         cost: {
-                            bsonType: "double"
+                            bsonType: "int"
                         }
                     }
                 }
@@ -97,6 +97,9 @@ const schemas = {
         bsonType: "object",
         required: ["source", "destination", "departure_hour", "departure_day", "duration", "seats", "cost"],
         properties: {
+            id: {
+                bsonType: "string"
+            },
             source: {
                 bsonType: "string",
                 minLength: 2
@@ -127,8 +130,14 @@ const schemas = {
                 bsonType: "int"
             },
             cost: {
-                bsonType: "double",
+                bsonType: "int",
                 minimum: 1
+            },
+            booked: {
+                bsonType: "int"
+            },
+            bought: {
+                bsonType: "int"
             }
         }
     },
