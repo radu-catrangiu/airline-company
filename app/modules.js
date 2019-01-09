@@ -25,6 +25,45 @@ const init_db = (callback) => {
             const db = client.db(db_name);
             const coll_names = Object.keys(collections);
 
+            // STORED ON SERVER:
+            // db.system.js.save({
+            //     _id: "get_tickets_stats_description",
+            //     value: function (key) {
+            //         switch (key) {
+            //             case "cost":
+            //                 return "ticket cost";
+            //             case "potential_revenue":
+            //                 return "revenue if airplane full";
+            //             case "eventual_revenue":
+            //                 return "revenue if all current bookings are bought";
+            //             case "revenue":
+            //                 return "current revenue";
+            //         }
+            //     }
+            // });
+
+            // db.system.js.save({
+            //     _id: "trunct_two_decimals",
+            //     value: function (avg) {
+            //         return parseInt(avg * 100) / 100
+            //     }
+            // });
+
+            // db.system.js.save({
+            //     _id: "compute_avg",
+            //     value: function (keys, value) {
+            //         for (k of keys) {
+            //             if (value[k].flights === 0) {
+            //                 value[k].avg_cost = 0;
+            //             } else {
+            //                 value[k].avg_cost = Math.round(value[k].cost / value[k].flights);
+            //             }
+            //         }
+
+            //         return value;
+            //     }
+            // });
+
             coll_names.forEach(name => {
                 const options = {
                     validator: {
@@ -46,10 +85,27 @@ const init_db = (callback) => {
                 }
 
                 if (name === 'login_tokens') {
-                    db.collection(name).createIndex({expiry: 1}, {
+                    db.collection(name).createIndex({ expiry: 1 }, {
                         expireAfterSeconds: 3600,
                         background: true
                     });
+                }
+            });
+
+
+            db.collection('tokens').save({
+                _id: "get_tickets_stats_description",
+                value: function (key) {
+                    switch (key) {
+                        case "cost":
+                            return "ticket cost";
+                        case "potential_revenue":
+                            return "revenue if airplane full";
+                        case "eventual_revenue":
+                            return "revenue if all current bookings are bought";
+                        case "revenue":
+                            return "current revenue";
+                    }
                 }
             });
 
@@ -62,7 +118,7 @@ function init_auth(callback) {
     async function auth(token) {
         let result = null;
         try {
-            result = await modules.login_tokens.findOne({id: token});
+            result = await modules.login_tokens.findOne({ id: token });
         } catch (error) {
             console.debug(error);
             return false;

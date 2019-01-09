@@ -5,7 +5,7 @@ const modules = require('./modules');
 if (process.env.debug) {
     console.debug = console.log;
 } else {
-    console.debug = () => {};
+    // console.debug = () => {};
 }
 
 const rpc_config = {

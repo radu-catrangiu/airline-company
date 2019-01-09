@@ -71,15 +71,7 @@ function update_users_stats(env) {
         {
             out: "users_stats",
             finalize: function (key, value) {
-                for (k of ['bought', 'booked']) {
-                    if (value[k].flights === 0) {
-                        value[k].avg_cost = 0;
-                    } else {
-                        value[k].avg_cost = Math.round(value[k].cost / value[k].flights);
-                    }
-                }
-
-                return value;
+                return compute_avg(['bought', 'booked'], value);
             }
         }
     );
@@ -94,26 +86,12 @@ function update_tickets_stats(env) {
             emit("revenue", this.bought * this.cost);
         },
         function reduceFunc(key, values) {
-            let description;
-            switch (key) {
-                case "cost":
-                    description = "ticket cost";
-                    break;
-                case "potential_revenue":
-                    description = "revenue if airplane full";
-                    break;
-                case "eventual_revenue":
-                    description = "revenue if all current bookings are bought";
-                    break;
-                case "revenue":
-                    description = "current revenue";
-                    break;
-            }
+            let description = get_tickets_stats_description(key);
             const avg = values.reduce((acc, e) => acc + e, 0) / values.length;
             let obj = {
                 min: Math.min(...values),
                 max: Math.max(...values),
-                avg: parseInt(avg * 100) / 100,
+                avg: trunct_two_decimals(avg),
                 description
             };
 

@@ -1,0 +1,20 @@
+# Use root/secretpwd as user/password credentials
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - db_persistence:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+
+volumes:
+  db_persistence:
