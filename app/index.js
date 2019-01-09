@@ -2,10 +2,10 @@ const config = require('./config');
 const server = require('./server/server');
 const modules = require('./modules');
 
-if (process.env.debug) {
+if (process.env.DEBUG) {
     console.debug = console.log;
 } else {
-    // console.debug = () => {};
+    console.debug = () => {};
 }
 
 const rpc_config = {

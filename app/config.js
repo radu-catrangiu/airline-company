@@ -203,10 +203,11 @@ const indexes = {
 
 module.exports = {
     mongo: {
-        url: "ds239873.mlab.com:39873/bd2",
-        user: "padawan",
-        password: "123Parola",
-        db: "bd2",
+        host: process.env.MONGO_HOST || "127.0.0.1",
+        port: process.env.MONGO_PORT || 27017,
+        user: process.env.MONGO_USER || "padawan",
+        password: process.env.MONGO_PWD || "123Parola",
+        db: process.env.MONGO_DB || "bd2",
         collections: {
             bookings: "bookings",
             login_tokens: "login_tokens",
@@ -219,5 +220,5 @@ module.exports = {
         schemas: schemas,
         indexes: indexes
     },
-    port: 8080
+    port: process.env.PORT || 8080
 };

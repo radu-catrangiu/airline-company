@@ -7,13 +7,19 @@ const modules = {};
 const init_db = (callback) => {
     const user = config.mongo.user;
     const password = config.mongo.password;
-    const login_url = config.mongo.url;
+    const host = config.mongo.host;
+    const port = config.mongo.port;
     const db_name = config.mongo.db;
     const collections = config.mongo.collections;
     const schemas = config.mongo.schemas;
     const indexes = config.mongo.indexes;
 
-    const url = `mongodb://${user}:${password}@${login_url}`;
+    let url;
+    if (user.length === 0 || password.length === 0) {
+        url = `mongodb://${host}:${port}/${db_name}`;
+    } else {
+        url = `mongodb://${user}:${password}@${host}:${port}/${db_name}`;
+    }
     const options = {
         useNewUrlParser: true
     };
@@ -27,30 +33,30 @@ const init_db = (callback) => {
 
             // STORED ON SERVER:
             // db.system.js.save({
-            //     _id: "get_tickets_stats_description",
+            //     _id: 'get_tickets_stats_description',
             //     value: function (key) {
             //         switch (key) {
-            //             case "cost":
-            //                 return "ticket cost";
-            //             case "potential_revenue":
-            //                 return "revenue if airplane full";
-            //             case "eventual_revenue":
-            //                 return "revenue if all current bookings are bought";
-            //             case "revenue":
-            //                 return "current revenue";
+            //             case 'cost':
+            //                 return 'ticket cost';
+            //             case 'potential_revenue':
+            //                 return 'revenue if airplane full';
+            //             case 'eventual_revenue':
+            //                 return 'revenue if all current bookings are bought';
+            //             case 'revenue':
+            //                 return 'current revenue';
             //         }
             //     }
             // });
 
             // db.system.js.save({
-            //     _id: "trunct_two_decimals",
+            //     _id: 'trunct_two_decimals',
             //     value: function (avg) {
             //         return parseInt(avg * 100) / 100
             //     }
             // });
 
             // db.system.js.save({
-            //     _id: "compute_avg",
+            //     _id: 'compute_avg',
             //     value: function (keys, value) {
             //         for (k of keys) {
             //             if (value[k].flights === 0) {

@@ -2,19 +2,19 @@
 version: '3.1'
 
 services:
-  # app:
-  #   image: bd2-app
-  #   ports:
-  #     - 80:8080
-  #   networks:
-  #     - net
-  #   environment:
-  #     - DEBUG=1
-  #     # - MONGO_HOST=mongo
-  #     # - MONGO_USER=padawan
-  #     # - MONGO_PWD=123Parola
-  #     # - MONGO_DB=bd2
-  #   command: node /service/index
+  app:
+    image: bd2-app
+    ports:
+      - 80:8080
+    networks:
+      - net
+    environment:
+      - DEBUG=1
+      - MONGO_HOST=mongo
+      - MONGO_USER=padawan
+      - MONGO_PWD=123Parola
+      - MONGO_DB=bd2
+    command: node /service/index
 
   mongo:
     image: mongo
