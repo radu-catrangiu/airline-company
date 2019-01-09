@@ -1,0 +1,43 @@
+# Use root/secretpwd as user/password credentials
+version: '3.1'
+
+services:
+  # app:
+  #   image: bd2-app
+  #   ports:
+  #     - 80:8080
+  #   networks:
+  #     - net
+  #   environment:
+  #     - DEBUG=1
+  #     # - MONGO_HOST=mongo
+  #     # - MONGO_USER=padawan
+  #     # - MONGO_PWD=123Parola
+  #     # - MONGO_DB=bd2
+  #   command: node /service/index
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      net:
+        aliases:
+          - mongo
+    volumes:
+      # - db_persistence:/data/db
+      - ./database/config/:/init
+      - ./database/init/:/docker-entrypoint-initdb.d
+
+  mongo-express:
+    image: mongo-express
+    networks:
+      - net
+    ports:
+      - 8081:8081
+
+networks:
+  net:
+
+volumes:
+  db_persistence:
